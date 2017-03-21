@@ -3,16 +3,19 @@ const Node = require('./node');
 class LinkedList {
     constructor() {
         this.length = 0;
+        this._head = null;
+        this._tail = null;
     }
 
     append(data) {
-        if (this.length === 0) {
+        if (this.isEmpty()) {
             this._head = new Node(data);
             this._tail = new Node(data);
         } else {
             this.insertAt(this.length, data);
         }
         this.length++;
+        return this;
     }
 
     head() {
@@ -24,79 +27,89 @@ class LinkedList {
     }
 
     at(index) {
-        var pos = 0,
-            node = this._head;
-        while(pos < index) {
+        var node = this._head;
+        var count = 1;
+        while (count <= index) {
             node = node.next;
-            pos++;
+            count ++;
         }
         return node.data;
     }
 
     insertAt(index, data) {
-        var pos = 0,
-            node;
-        var newNode = new Node(data);
-        while(pos < index) {
-            if (pos === 0) {
-                node = this._head;
-            } else {
-                node = node.next;
-            }
-            pos++;
-        }
-        var nextNode;
-        if (pos === this.length) {
-            nextNode = this._tail;
+        var node = this._head;
+        var count = 1;
+        
+        if (index > this.length) {
+            throw new Error('Cannot insert at ' + index + ' as it is more than the length of LL');
         } else {
-            nextNode = node.next;
+            if (this.length === 0) {
+                return this.append(data);
+            }
         }
-        newNode.next = node.next;
-        node.next = newNode;
+        
+        while (count < index) {
+            node = node.next;
+            count ++;
+        }
+        var newNode = new Node(data);
         newNode.prev = node;
-        nextNode.prev = newNode;
-        if (index === this.length) {
-            this._tail = nextNode;
+        if(index === this.length) {
+            this._tail = newNode;
+        } else {
+            newNode.next = node.next;
         }
+        node.next = newNode;
     }
 
     isEmpty() {
-        return this.length == 0;
+        return this.length === 0;
     }
 
     clear() {
         this._head = null;
         this._tail = null;
         this.length = 0;
+        return this;
     }
 
     deleteAt(index) {
-        var pos = 0,
-            node;
-        while(pos < index) {
-            if (pos === 0) {
-                node = this._head;
-            } else {
+        if (this.length > 1) {
+            var node = this._head;
+            var count = 1;
+            while (count < index) {
                 node = node.next;
+                count ++;
             }
-            pos++;
+            node.prev.next = node.next;
+        } else {
+            this.clear();
         }
-        node.prev.next = node.next;
+        return this;
     }
 
     reverse() {
+        if(this.length > 1) {
+            var node = this._tail;
+            while(node.prev !== null) {
+                node.next = node.prev;
+                node = node.next;
+            }
+            this._head = this._tail;
+            this._tail = node;
+        }
+        return this;
     }
 
     indexOf(data) {
-        var pos = 0;
         var node = this._head;
-        while(pos < this.length) {
+        var count = 0;
+        while (count < this.length) {
             if (node.data === data) {
-                return pos;
-            } else {
-                node = node.next;
+                return count;
             }
-            pos++;
+            node = node.next;
+            count ++;
         }
         return -1;
     }
