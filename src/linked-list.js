@@ -27,8 +27,8 @@ class LinkedList {
     }
 
     at(index) {
-        var node = this._head;
-        var count = 1;
+        var node = this._head,
+            count = 1;
         while (count <= index) {
             node = node.next;
             count ++;
@@ -37,8 +37,9 @@ class LinkedList {
     }
 
     insertAt(index, data) {
-        var node = this._head;
-        var count = 1;
+        var node = this._head,
+            count = 1,
+            newNode;
         
         if (index > this.length) {
             throw new Error('Cannot insert at ' + index + ' as it is more than the length of LL');
@@ -52,7 +53,7 @@ class LinkedList {
             node = node.next;
             count ++;
         }
-        var newNode = new Node(data);
+        newNode = new Node(data);
         newNode.prev = node;
         if(index === this.length) {
             this._tail = newNode;
@@ -74,9 +75,11 @@ class LinkedList {
     }
 
     deleteAt(index) {
+        var node,
+            count;
         if (this.length > 1) {
-            var node = this._head;
-            var count = 1;
+            node = this._head,
+            count = 1;
             while (count < index) {
                 node = node.next;
                 count ++;
@@ -89,9 +92,10 @@ class LinkedList {
     }
 
     reverse() {
+        var node;
         if(this.length > 1) {
-            var node = this._tail;
-            while(node.prev !== null) {
+            node = this._tail;
+            while(node.prev) {
                 node.next = node.prev;
                 node = node.next;
             }
@@ -102,8 +106,8 @@ class LinkedList {
     }
 
     indexOf(data) {
-        var node = this._head;
-        var count = 0;
+        var node = this._head,
+            count = 0;
         while (count < this.length) {
             if (node.data === data) {
                 return count;
